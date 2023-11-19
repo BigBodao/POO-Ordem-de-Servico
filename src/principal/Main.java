@@ -1,10 +1,11 @@
 package principal;
 
+import java.sql.PreparedStatement; 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Main {
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
+	Connection conexao = ConnectionFactory.getConnection();
+	
+		
 }
