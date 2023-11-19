@@ -9,17 +9,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter.FilterBypass;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Component;
+
+import javax.print.attribute.AttributeSet;
 import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.border.CompoundBorder;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+
 
 public class TelaInicial extends JFrame {
 	private JLabel viewValorProduto;
@@ -55,11 +72,13 @@ public class TelaInicial extends JFrame {
 	 */
 	
 	public TelaInicial() {
+		setForeground(new Color(0, 128, 192));
 		setTitle("Gestão de Ordem de Serviço");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 720, 274);
+		setBounds(100, 100, 720, 226);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setForeground(new Color(30, 144, 255));
+		contentPane.setBorder(new CompoundBorder());
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -96,7 +115,7 @@ public class TelaInicial extends JFrame {
 		contentPane.add(horizontalStrut);
 		
 		viewValorProduto = new JLabel();
-        viewValorProduto.setBounds(304, 57, 70, 14);
+		viewValorProduto.setBounds(304, 57, 70, 14);
         contentPane.add(viewValorProduto);
 		
 		JLabel ViewProduto = new JLabel("Produto:");
@@ -104,7 +123,7 @@ public class TelaInicial extends JFrame {
 		contentPane.add(ViewProduto);
 		
 		ListaProdutos = new JComboBox<>();
-        ListaProdutos.setBounds(66, 53, 154, 22);
+		ListaProdutos.setBounds(66, 53, 154, 22);
         contentPane.add(ListaProdutos);
 		
 		
@@ -146,8 +165,8 @@ public class TelaInicial extends JFrame {
 		contentPane.add(ViewLargura);
 		
 		LarguraProduto = new JTextField();
-		LarguraProduto.setText("0");
 		LarguraProduto.setBounds(304, 82, 50, 20);
+		LarguraProduto.setText("0");
 		contentPane.add(LarguraProduto);
 		LarguraProduto.setColumns(10);
 		
@@ -156,8 +175,8 @@ public class TelaInicial extends JFrame {
 		contentPane.add(ViewAltura);
 		
 		AlturaProduto = new JTextField();
-		AlturaProduto.setText("0");
 		AlturaProduto.setBounds(304, 113, 50, 20);
+		AlturaProduto.setText("0");
 		contentPane.add(AlturaProduto);
 		AlturaProduto.setColumns(10);
 		
@@ -166,8 +185,8 @@ public class TelaInicial extends JFrame {
 		contentPane.add(ViewQtd);
 		
 		QuantidadeProduto = new JTextField();
-		QuantidadeProduto.setText("1");
 		QuantidadeProduto.setBounds(475, 54, 46, 20);
+		QuantidadeProduto.setText("1");
 		contentPane.add(QuantidadeProduto);
 		QuantidadeProduto.setColumns(10);
 		
@@ -216,14 +235,75 @@ public class TelaInicial extends JFrame {
                 atualizarVlrTotal();
             }
         });
-        addDocumentListenerToTextField(AlturaProduto);
-        addDocumentListenerToTextField(LarguraProduto);
-        addDocumentListenerToTextField(QuantidadeProduto);
+        BotaoSalvar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                SalvarPDF();
+            }
+        });
+        VerificarCamposTexto(AlturaProduto);
+        VerificarCamposTexto(LarguraProduto);
+        VerificarCamposTexto(QuantidadeProduto);
+        VerificarCamposTexto(IdCliente);
+        VerificarCamposTexto(TelCliente);
 		
 
 	}
 	
-	private void addDocumentListenerToTextField(JTextField textField) {
+	private void SalvarPDF() {
+	    PDDocument document = new PDDocument();
+
+	    try {
+	        PDPage page = new PDPage();
+	        document.addPage(page);
+
+	        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+	        InputStream fontStream = getClass().getResourceAsStream("C:\\Windows\\Fonts/arial.ttf");
+	        PDType0Font font = PDType0Font.load(document, fontStream);
+
+	        contentStream.setFont(font, 12);
+	        contentStream.beginText();
+	        contentStream.newLineAtOffset(50, 700);
+
+	        contentStream.showText("Ordem de Serviço");
+	        contentStream.newLine();
+	        contentStream.showText("==================");
+	        contentStream.newLine();
+	        contentStream.showText("Nome: " + NomeCliente.getText());
+	        contentStream.newLine();
+	        contentStream.showText("CPF | CNPJ: " + IdCliente.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Telefone: " + TelCliente.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Produto: " + ListaProdutos.getSelectedItem());
+	        contentStream.newLine();
+	        contentStream.showText("Valor: " + viewValorProduto.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Largura: " + LarguraProduto.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Altura: " + AlturaProduto.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Quantidade: " + QuantidadeProduto.getText());
+	        contentStream.newLine();
+	        contentStream.showText("Valor Total: " + vlrTotal.getText());
+	        contentStream.newLine();
+	      
+	        contentStream.endText();
+	        contentStream.close();
+
+	        document.save("dados_ordem_de_servico.pdf");
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            document.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	private void VerificarCamposTexto(JTextField textField) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -238,9 +318,10 @@ public class TelaInicial extends JFrame {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 atualizarVlrTotal();
-            }
+            }                                
         });
     }
+	
 	
 	private void atualizarVlrTotal() {
 		try {
@@ -280,6 +361,4 @@ public class TelaInicial extends JFrame {
             e.printStackTrace();
         }
     }
-	
-	
 }

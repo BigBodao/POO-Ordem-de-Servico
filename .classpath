@@ -8,5 +8,13 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-j-8.0.33.jar"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/pdfbox-app-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Documentos/POO-Ordem-de-Servico/projetoorcamento"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/pdfbox-tools-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/xmpbox-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/preflight-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/fontbox-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/pdfbox-3.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lucas/Downloads/pdfbox-io-3.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
